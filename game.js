@@ -46,7 +46,7 @@ function drawX(row, col) {
     ctx.moveTo(x + cellSize - padding, y + padding);
     ctx.lineTo(x + padding, y + cellSize - padding);
 
-    ctx.strokeStyle = "blue";
+    //ctx.strokeStyle = "blue";
     ctx.lineWidth = 5;
     ctx.stroke();
 }
@@ -59,7 +59,7 @@ function drawO(row, col) {
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, Math.PI * 2);
 
-    ctx.strokeStyle = "red";
+    //ctx.strokeStyle = "red";
     ctx.lineWidth = 5;
     ctx.stroke();
 }
@@ -157,6 +157,12 @@ function gameLoop() {
     draw();
 
     if (gameOver) {
+        if (turnCount == 9){
+            console.log("Game Tied");
+        }
+        else {
+            turnCount % 2 ?   console.log("O won") : console.log("X won")
+        }
         return;
     }
 
