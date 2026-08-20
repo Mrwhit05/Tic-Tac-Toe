@@ -33,49 +33,49 @@ let grids = [
 
 function checkWin(grid, turnCount) {
     //win con A top row
-    if (grid[0][0] != "" && grid[0][0] === grid[0][1] && grid[0][1] === grid[0][2]){
+    if (grid[0][0] != "T" && grid[0][0] != "" && grid[0][0] === grid[0][1] && grid[0][1] === grid[0][2]){
         console.log("win A");
         return grid[0][0];
     }
 
     //win con B mid row
-    else if (grid[1][0] != "" && grid[1][0] === grid[1][1] && grid[1][1] === grid[1][2]){
+    else if (grid[1][0] != "T" && grid[1][0] != "" && grid[1][0] === grid[1][1] && grid[1][1] === grid[1][2]){
         console.log("win B");
         return grid[1][0];
     }
 
     //win con C bottom row
-    else if (grid[2][0] != "" && grid[2][0] === grid[2][1] && grid[2][1] === grid[2][2]){
+    else if (grid[2][0] != "T" && grid[2][0] != "" && grid[2][0] === grid[2][1] && grid[2][1] === grid[2][2]){
         console.log("win C");
         return grid[2][0];
     }
 
     //win con D left col
-    else if (grid[0][0] != "" && grid[0][0] === grid[1][0] && grid[1][0] === grid[2][0]){
+    else if (grid[0][0] != "T" && grid[0][0] != "" && grid[0][0] === grid[1][0] && grid[1][0] === grid[2][0]){
         console.log("win D");
         return grid[0][0];
     }
 
     //win con E mid col
-    else if (grid[0][1] != "" && grid[0][1] === grid[1][1] && grid[1][1] === grid[2][1]){
+    else if (grid[0][1] != "T" && grid[0][1] != "" && grid[0][1] === grid[1][1] && grid[1][1] === grid[2][1]){
         console.log("win E");
         return grid[0][1];
     }
 
     //win con F right col
-    else if (grid[0][2] != "" && grid[0][2] === grid[1][2] && grid[1][2] === grid[2][2]){
+    else if (grid[0][2] != "T" && grid[0][2] != "" && grid[0][2] === grid[1][2] && grid[1][2] === grid[2][2]){
         console.log("win F");
         return grid[0][2];
     }
 
     //win con G L > R diag
-    else if (grid[0][0] != "" && grid[0][0] === grid[1][1] && grid[1][1] === grid[2][2]){
+    else if (grid[0][0] != "T" && grid[0][0] != "" && grid[0][0] === grid[1][1] && grid[1][1] === grid[2][2]){
         console.log("win G");
         return grid[0][0];
     }
 
     //win con H R > L diag
-    else if (grid[0][2] != "" && grid[0][2] === grid[1][1] && grid[1][1] === grid[2][0]){
+    else if (grid[0][2] != "T" && grid[0][2] != "" && grid[0][2] === grid[1][1] && grid[1][1] === grid[2][0]){
         console.log("win H");
         return grid[0][2];
     }
@@ -132,7 +132,6 @@ canvas.addEventListener("click", function(event) {
 
     console.log(`Board Row: ${lastBoard.row}, Board Column: ${lastBoard.col}`);
 
-    //turnCount % 2 ? grids[boardRow][boardCol][cellRow][cellCol] = "O" : grids[boardRow][boardCol][cellRow][cellCol] = "X"
     grids[boardRow][boardCol][cellRow][cellCol] = currentPlayer;
     console.log(grids);
 
@@ -333,7 +332,7 @@ function gameLoop() {
             console.log("Game Tied");
         }
         else {
-            globalTurnCount % 2 ? console.log("O won") : console.log("X won")
+            console.log(`${currentPlayer} won`);
         }
     }
 
