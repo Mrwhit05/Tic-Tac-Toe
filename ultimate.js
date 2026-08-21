@@ -4,8 +4,27 @@ const ctx = canvas.getContext("2d");
 //canvas.width = window.innerWidth;
 //canvas.height = window.innerHeight;
 
+/*
 const smallCellSize = 600 / 9;
 const boardSize = smallCellSize * 3;
+*/
+
+let smallCellSize;
+let boardSize;
+
+function resizeCanvas() {
+    const container = document.querySelector(".canvas-container");
+
+    const size = Math.min(container.clientWidth, container.clientHeight) * 0.9;
+
+    canvas.width = size;
+    canvas.height = size;
+
+    smallCellSize = size / 9;
+    boardSize = size / 3;
+
+    draw();
+}
 
 let activeBoard = null;
 let lastBoard = null;
@@ -100,6 +119,10 @@ let turnTracker = [
         [0, 0, 0],
         [0, 0, 0]
 ]
+
+window.addEventListener("resize", resizeCanvas);
+
+resizeCanvas();
 
 canvas.addEventListener("click", function(event) {
     const rect = canvas.getBoundingClientRect();
