@@ -51,64 +51,73 @@ let grids = [
     ];
 
 function checkWin(grid, turnCount) {
+
     //win con A top row
     if (grid[0][0] != "T" && grid[0][0] != "" && grid[0][0] === grid[0][1] && grid[0][1] === grid[0][2]){
         console.log("win A");
-        return grid[0][0];
+        return {winner: grid[0][0], winCon: "A"};
     }
 
     //win con B mid row
     else if (grid[1][0] != "T" && grid[1][0] != "" && grid[1][0] === grid[1][1] && grid[1][1] === grid[1][2]){
         console.log("win B");
-        return grid[1][0];
+        return {winner: grid[1][0], winCon: "B"};
     }
 
     //win con C bottom row
     else if (grid[2][0] != "T" && grid[2][0] != "" && grid[2][0] === grid[2][1] && grid[2][1] === grid[2][2]){
         console.log("win C");
-        return grid[2][0];
+        return {winner: grid[2][0], winCon: "C"};
     }
 
     //win con D left col
     else if (grid[0][0] != "T" && grid[0][0] != "" && grid[0][0] === grid[1][0] && grid[1][0] === grid[2][0]){
         console.log("win D");
-        return grid[0][0];
+        return {winner: grid[0][0], winCon: "D"};
     }
 
     //win con E mid col
     else if (grid[0][1] != "T" && grid[0][1] != "" && grid[0][1] === grid[1][1] && grid[1][1] === grid[2][1]){
         console.log("win E");
-        return grid[0][1];
+        return {winner: grid[0][1], winCon: "E"};
     }
 
     //win con F right col
     else if (grid[0][2] != "T" && grid[0][2] != "" && grid[0][2] === grid[1][2] && grid[1][2] === grid[2][2]){
         console.log("win F");
-        return grid[0][2];
+        return {winner: grid[0][2], winCon: "F"};
     }
 
     //win con G L > R diag
     else if (grid[0][0] != "T" && grid[0][0] != "" && grid[0][0] === grid[1][1] && grid[1][1] === grid[2][2]){
         console.log("win G");
-        return grid[0][0];
+        return {winner: grid[0][0], winCon: "G"};
     }
 
     //win con H R > L diag
     else if (grid[0][2] != "T" && grid[0][2] != "" && grid[0][2] === grid[1][1] && grid[1][1] === grid[2][0]){
         console.log("win H");
-        return grid[0][2];
+        return {winner: grid[0][2], winCon: "H"};
     }
 
     //tie con
     else if (turnCount == 9){
         console.log("tie");
-        return "T";
+        return {winner: "T", winCon: ""};
     } 
 
+    
+    console.log("win con grid", winCon);
     console.log("internal count", turnCount);
 }
 
 let winners = [
+        ["", "", ""],
+        ["", "", ""],
+        ["", "", ""]
+]
+
+let winCon = [
         ["", "", ""],
         ["", "", ""],
         ["", "", ""]
@@ -156,7 +165,7 @@ canvas.addEventListener("click", function(event) {
     console.log(`Board Row: ${lastBoard.row}, Board Column: ${lastBoard.col}`);
 
     grids[boardRow][boardCol][cellRow][cellCol] = currentPlayer;
-    console.log(grids);
+    console.log("board", grids);
 
     if (lastBoard != null && !winners[lastBoard.row][lastBoard.col]){
         turnTracker[lastBoard.row][lastBoard.col] += 1;
@@ -167,7 +176,6 @@ canvas.addEventListener("click", function(event) {
     if (winners[activeBoard.row][activeBoard.col] != ""){
         activeBoard = null;
     }
-    //console.log(turnCount);
 });
 
 function drawX(row, col) {
@@ -268,7 +276,7 @@ function drawActiveBoard() {
 
 function drawCompletedBoards() {
 
-    ctx.font = "70px Arial";
+    ctx.font = `${boardSize}px Arial`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
@@ -281,6 +289,14 @@ function drawCompletedBoards() {
             if (winner === "")
                 continue;
 
+            if (winner === "X"){
+                ctx.fillStyle = "red";
+            }
+
+            if (winner === "O"){
+                ctx.fillStyle = "blue";
+            }
+
             const x = boardCol * boardSize + boardSize / 2;
             const y = boardRow * boardSize + boardSize / 2;
 
@@ -292,18 +308,139 @@ function drawCompletedBoards() {
 
 }
 
+function drawWinLine(){
+    for (let boardRow = 0; boardRow < 3; boardRow++) {
+        for (let boardCol = 0; boardCol < 3; boardCol++) {
+            const con = winCon[boardRow][boardCol];
+
+            if (con === "") {
+                continue;
+            }
+
+            const offsetX = boardCol * boardSize;
+            const offsetY = boardRow * boardSize;
+
+            const padding = smallCellSize * 0.2;
+
+            ctx.beginPath();
+
+            switch (con) {
+
+                // Top row
+                case "A":
+                    ctx.moveTo(
+                        offsetX + padding,
+                        offsetY + smallCellSize / 2
+                    );
+                    ctx.lineTo(
+                        offsetX + boardSize - padding,
+                        offsetY + smallCellSize / 2
+                    );
+                    break;
+
+                // Middle row
+                case "B":
+                    ctx.moveTo(
+                        offsetX + padding,
+                        offsetY + boardSize / 2
+                    );
+                    ctx.lineTo(
+                        offsetX + boardSize - padding,
+                        offsetY + boardSize / 2
+                    );
+                    break;
+
+                // Bottom row
+                case "C":
+                    ctx.moveTo(
+                        offsetX + padding,
+                        offsetY + boardSize - smallCellSize / 2
+                    );
+                    ctx.lineTo(
+                        offsetX + boardSize - padding,
+                        offsetY + boardSize - smallCellSize / 2
+                    );
+                    break;
+
+                // Left column
+                case "D":
+                    ctx.moveTo(
+                        offsetX + smallCellSize / 2,
+                        offsetY + padding
+                    );
+                    ctx.lineTo(
+                        offsetX + smallCellSize / 2,
+                        offsetY + boardSize - padding
+                    );
+                    break;
+
+                // Middle column
+                case "E":
+                    ctx.moveTo(
+                        offsetX + boardSize / 2,
+                        offsetY + padding
+                    );
+                    ctx.lineTo(
+                        offsetX + boardSize / 2,
+                        offsetY + boardSize - padding
+                    );
+                    break;
+
+                // Right column
+                case "F":
+                    ctx.moveTo(
+                        offsetX + boardSize - smallCellSize / 2,
+                        offsetY + padding
+                    );
+                    ctx.lineTo(
+                        offsetX + boardSize - smallCellSize / 2,
+                        offsetY + boardSize - padding
+                    );
+                    break;
+
+                // Left → right diagonal
+                case "G":
+                    ctx.moveTo(
+                        offsetX + padding,
+                        offsetY + padding
+                    );
+                    ctx.lineTo(
+                        offsetX + boardSize - padding,
+                        offsetY + boardSize - padding
+                    );
+                    break;
+
+                // Right → left diagonal
+                case "H":
+                    ctx.moveTo(
+                        offsetX + boardSize - padding,
+                        offsetY + padding
+                    );
+                    ctx.lineTo(
+                        offsetX + padding,
+                        offsetY + boardSize - padding
+                    );
+                    break;
+            }
+
+            ctx.stroke();
+        }
+    }
+}
+
 function update() {
     if (lastBoard == null) {
         return;
     }
 
-    let winner = checkWin(grids[lastBoard.row][lastBoard.col], turnTracker[lastBoard.row][lastBoard.col]);
-    if (winner){
-        winners[lastBoard.row][lastBoard.col] = winner;
+    let result = checkWin(grids[lastBoard.row][lastBoard.col], turnTracker[lastBoard.row][lastBoard.col]);
+    if (result){
+        winners[lastBoard.row][lastBoard.col] = result.winner;
+        winCon[lastBoard.row][lastBoard.col] = result.winCon;
         //turnTracker[activeBoard.row][activeBoard.col] = turnCount;
         globalTurnCount += 1;
         console.log("Winners", winners);
-        winner = null;
+        console.log("Win Con", winCon);
 
         if (activeBoard !== null && winners[activeBoard.row][activeBoard.col] !== ""){
             activeBoard = null;
@@ -312,9 +449,11 @@ function update() {
 
     lastBoard = null;
 
-    let overallWinner = checkWin(winners, globalTurnCount);
-    if (overallWinner){
-        console.log("Overall winner: ", overallWinner);
+    let overallResult = checkWin(winners, globalTurnCount);
+    if (overallResult){
+        console.log("Overall winner: ", overallResult.winner);
+        console.log("Overall win condition: ", overallResult.winCon);
+
         gameOver = true;
     }
 }
@@ -342,6 +481,7 @@ function draw() {
         }
     }
 
+    drawWinLine();
     drawCompletedBoards();
     drawActiveBoard();
 }
@@ -350,13 +490,15 @@ function gameLoop() {
     update();
     draw();
 
-    if (gameOver) {
+    let triggered = false;
+    if (!triggered && gameOver) {
         if (globalTurnCount == 9){
             console.log("Game Tied");
         }
         else {
             console.log(`${currentPlayer} won`);
         }
+        triggered = true;
     }
 
     requestAnimationFrame(gameLoop);
