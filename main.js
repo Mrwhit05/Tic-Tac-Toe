@@ -1,4 +1,5 @@
 import { ultimate } from "./ultimate.js";
+import { classic } from "./game.js";
 
 console.log("MAIN LOADED");
 console.log(ultimate);
@@ -67,7 +68,7 @@ function handleGameModeClick(mouseX, mouseY) {
         mouseY <= classicY + buttonHeight
     ) {
         selectGameMode("CLASSIC");
-        return;
+        //return;
     }
 
     // Ultimate
@@ -103,7 +104,7 @@ function handleWinClick(mouseX, mouseY) {
 function selectGameMode(mode){
     switch (mode) {
         case "CLASSIC":
-            //currentGame = classic;
+            currentGame = classic;
             break;
 
         case "ULTIMATE":
