@@ -115,6 +115,13 @@ function selectGameMode(mode){
             return;
     }
     currentGame.setCanvas(canvas, ctx);
+    currentGame.resize();
+
+    window.addEventListener("resize", () => {
+        currentGame.resize();
+        draw();
+    });
+
     currentGame.start();
     scene = "GAME";
 }

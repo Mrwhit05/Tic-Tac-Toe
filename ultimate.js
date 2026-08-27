@@ -4,6 +4,7 @@ export const ultimate = {
     update,
     draw,
     setCanvas,
+    resize: resizeCanvas,
     getResult
 };
 
@@ -22,12 +23,12 @@ function setCanvas(gameCanvas, gameContext){
 //canvas.height = window.innerHeight;
 
 
-const smallCellSize = 600 / 9;
-const boardSize = smallCellSize * 3;
+//const smallCellSize = 600 / 9;
+//const boardSize = smallCellSize * 3;
 
 //needs resize to work
-//let smallCellSize;
-//let boardSize;
+let smallCellSize = 600 / 9;
+let boardSize = smallCellSize * 3;
 
 function resizeCanvas() {
     const container = document.querySelector(".canvas-container");
