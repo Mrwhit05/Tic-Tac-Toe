@@ -1,16 +1,33 @@
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
+export const ultimate = {
+    start,
+    click: handleClick,
+    update,
+    draw,
+    setCanvas,
+    getResult
+};
+
+let ctx;
+let canvas;
+
+function setCanvas(gameCanvas, gameContext){
+    canvas = gameCanvas;
+    ctx = gameContext;
+}
+
+//const canvas = document.getElementById("game");
+//const ctx = canvas.getContext("2d");
 
 //canvas.width = window.innerWidth;
 //canvas.height = window.innerHeight;
 
-/*
+
 const smallCellSize = 600 / 9;
 const boardSize = smallCellSize * 3;
-*/
 
-let smallCellSize;
-let boardSize;
+//needs resize to work
+//let smallCellSize;
+//let boardSize;
 
 function resizeCanvas() {
     const container = document.querySelector(".canvas-container");
@@ -31,6 +48,7 @@ let lastBoard = null;
 let gameOver = false;
 let globalTurnCount = 0;
 let currentPlayer = "X";
+let winner = null;
 
 function switchPlayer() {
     currentPlayer = currentPlayer === "X" ? "O" : "X";
@@ -129,16 +147,11 @@ let turnTracker = [
         [0, 0, 0]
 ]
 
-window.addEventListener("resize", resizeCanvas);
+//window.addEventListener("resize", resizeCanvas);
 
-resizeCanvas();
+//resizeCanvas();
 
-canvas.addEventListener("click", function(event) {
-    const rect = canvas.getBoundingClientRect();
-
-    const mouseX = event.clientX - rect.left;
-    const mouseY = event.clientY - rect.top;
-
+function handleClick(mouseX, mouseY) {
     const boardCol = Math.floor(mouseX / boardSize);
     const boardRow = Math.floor(mouseY / boardSize);
 
@@ -176,7 +189,7 @@ canvas.addEventListener("click", function(event) {
     if (winners[activeBoard.row][activeBoard.col] != ""){
         activeBoard = null;
     }
-});
+};
 
 function drawX(row, col) {
     const x = col * smallCellSize;
@@ -455,7 +468,14 @@ function update() {
         console.log("Overall win condition: ", overallResult.winCon);
 
         gameOver = true;
+        winner = overallResult.winner;
     }
+}
+
+function getResult() {
+    return {
+        gameOver, winner
+    };
 }
 
 function draw() {
@@ -486,11 +506,12 @@ function draw() {
     drawActiveBoard();
 }
 
+let triggered = false;
 function gameLoop() {
     update();
     draw();
 
-    let triggered = false;
+    
     if (!triggered && gameOver) {
         if (globalTurnCount == 9){
             console.log("Game Tied");
@@ -504,4 +525,39 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-gameLoop();
+function start() {
+    activeBoard = null;
+    lastBoard = null;
+    gameOver = false;
+    winner = null;
+    globalTurnCount = 0;
+    currentPlayer = "X";
+
+    grids = [
+        [createGrid(), createGrid(), createGrid()],
+        [createGrid(), createGrid(), createGrid()],
+        [createGrid(), createGrid(), createGrid()]
+    ];
+
+    winners = [
+        ["", "", ""],
+        ["", "", ""],
+        ["", "", ""]
+    ];
+
+    winCon = [
+        ["", "", ""],
+        ["", "", ""],
+        ["", "", ""]
+    ];
+
+    turnTracker = [
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0]
+    ];
+}
+
+//gameLoop();
+
+//export { ultimate };

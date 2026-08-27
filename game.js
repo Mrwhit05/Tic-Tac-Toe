@@ -1,3 +1,10 @@
+export const classic = {
+    start,
+    handleClick,
+    update,
+    draw
+};
+
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
