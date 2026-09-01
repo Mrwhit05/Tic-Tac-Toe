@@ -304,7 +304,9 @@ function drawWinScreen(){
 
 
 function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (scene !== "WIN") {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
 
     switch (scene) {
         case "START":
@@ -320,6 +322,7 @@ function draw() {
             break;
 
         case "WIN":
+            currentGame.draw();
             drawWinScreen();
             break;
     }

@@ -50,6 +50,7 @@ let gameOver = false;
 let globalTurnCount = 0;
 let currentPlayer = "X";
 let winner = null;
+let overallWinCon = "";
 
 function switchPlayer() {
     currentPlayer = currentPlayer === "X" ? "O" : "X";
@@ -442,6 +443,123 @@ function drawWinLine(){
     }
 }
 
+function drawOverallWinLine() {
+    if (overallWinCon === ""){
+        return;
+    }
+
+    const padding = smallCellSize * 0.2;
+    ctx.beginPath();
+
+    switch (overallWinCon) {
+
+        // Top row
+        case "A":
+            ctx.moveTo(
+                padding,
+                boardSize / 2
+            );
+            ctx.lineTo(
+                canvas.width - padding,
+                boardSize / 2
+            );
+            break;
+
+        // Middle row
+        case "B":
+            ctx.moveTo(
+                padding,
+                boardSize + boardSize / 2
+            );
+            ctx.lineTo(
+                canvas.width - padding,
+                boardSize + boardSize / 2
+            );
+            break;
+
+        // Bottom row
+        case "C":
+            ctx.moveTo(
+                padding,
+                boardSize * 2 + boardSize / 2
+            );
+            ctx.lineTo(
+                canvas.width - padding,
+                boardSize * 2 + boardSize / 2
+            );
+            break;
+
+        // Left column
+        case "D":
+            ctx.moveTo(
+                boardSize / 2,
+                padding
+            );
+            ctx.lineTo(
+                boardSize / 2,
+                canvas.height - padding
+            );
+            break;
+
+        // Middle column
+        case "E":
+            ctx.moveTo(
+                boardSize + boardSize / 2,
+                padding
+            );
+            ctx.lineTo(
+                boardSize + boardSize / 2,
+                canvas.height - padding
+            );
+            break;
+
+        // Right column
+        case "F":
+            ctx.moveTo(
+                boardSize * 2 + boardSize / 2,
+                padding
+            );
+            ctx.lineTo(
+                boardSize * 2 + boardSize / 2,
+                canvas.height - padding
+            );
+            break;
+
+        // Left → right diagonal
+        case "G":
+            ctx.moveTo(
+                padding,
+                padding
+            );
+            ctx.lineTo(
+                canvas.width - padding,
+                canvas.height - padding
+            );
+            break;
+
+        // Right → left diagonal
+        case "H":
+            ctx.moveTo(
+                canvas.width - padding,
+                padding
+            );
+            ctx.lineTo(
+                padding,
+                canvas.height - padding
+            );
+            break;
+
+        default:
+            return;
+    }
+
+    ctx.lineWidth = 8;
+    ctx.strokeStyle = "black";
+    ctx.stroke();
+
+    ctx. lineWidth = 1;
+}
+
 function update() {
     if (lastBoard == null) {
         return;
@@ -470,6 +588,7 @@ function update() {
 
         gameOver = true;
         winner = overallResult.winner;
+        overallWinCon = overallResult.winCon;
     }
 }
 
@@ -505,6 +624,7 @@ function draw() {
     drawWinLine();
     drawCompletedBoards();
     drawActiveBoard();
+    drawOverallWinLine();
 }
 
 let triggered = false;
@@ -533,6 +653,7 @@ function start() {
     winner = null;
     globalTurnCount = 0;
     currentPlayer = "X";
+    overallWinCon = "";
 
     grids = [
         [createGrid(), createGrid(), createGrid()],
