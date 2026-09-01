@@ -4,7 +4,7 @@ export const ultimate = {
     update,
     draw,
     setCanvas,
-    resize: resizeCanvas,
+    setSize,
     getResult
 };
 
@@ -30,17 +30,9 @@ function setCanvas(gameCanvas, gameContext){
 let smallCellSize = 600 / 9;
 let boardSize = smallCellSize * 3;
 
-function resizeCanvas() {
-    const container = document.querySelector(".canvas-container");
-
-    const size = Math.min(container.clientWidth, container.clientHeight) * 0.9;
-
-    canvas.width = size;
-    canvas.height = size;
-
+function setSize(size) {
     smallCellSize = size / 9;
     boardSize = size / 3;
-
     draw();
 }
 
@@ -225,6 +217,9 @@ function drawO(row, col) {
 }
 
 function drawSmallGrid(){
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 1;
+
     for (let gridRow = 0; gridRow < 3; gridRow++) {
         for (let gridCol = 0; gridCol < 3; gridCol++) {
             const offsetX = gridCol * boardSize;
@@ -310,6 +305,10 @@ function drawCompletedBoards() {
 
             if (winner === "O"){
                 ctx.fillStyle = "blue";
+            }
+
+            if (winner === "T"){
+                ctx.fillStyle = "white";
             }
 
             const x = boardCol * boardSize + boardSize / 2;
@@ -560,6 +559,25 @@ function drawOverallWinLine() {
     ctx. lineWidth = 1;
 }
 
+function drawFreeMoveBanner() {
+    if (activeBoard !== null || gameOver) {
+        return;
+    }
+
+    const bannerHeight = boardSize * 0.25;
+
+    ctx.save();
+    ctx.fillStyle = "rgba(0, 0, 0, 0.55)";
+    ctx.fillRect(0, 0, canvas.width, bannerHeight);
+
+    ctx.fillStyle = "white";
+    ctx.font = `${bannerHeight * 0.5}px Arial`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("Click anywhere", canvas.width / 2, bannerHeight / 2);
+    ctx.restore();
+}
+
 function update() {
     if (lastBoard == null) {
         return;
@@ -624,6 +642,7 @@ function draw() {
     drawWinLine();
     drawCompletedBoards();
     drawActiveBoard();
+    drawFreeMoveBanner();
     drawOverallWinLine();
 }
 

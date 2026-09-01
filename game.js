@@ -4,7 +4,7 @@ export const classic = {
     update,
     draw,
     setCanvas,
-    resize: resizeCanvas,
+    setSize,
     getResult
 };
 
@@ -25,16 +25,8 @@ function setCanvas(gameCanvas, gameContext){
 //const cellSize = 100;
 let cellSize = 100;
 
-function resizeCanvas() {
-    const container = document.querySelector(".canvas-container");
-
-    const size = Math.min(container.clientWidth, container.clientHeight) * 0.9;
-
-    canvas.width = size;
-    canvas.height = size;
-
+function setSize(size) {
     cellSize = size / 3;
-
     draw();
 }
 
@@ -87,9 +79,10 @@ function drawX(row, col) {
     ctx.moveTo(x + cellSize - padding, y + padding);
     ctx.lineTo(x + padding, y + cellSize - padding);
 
-    //ctx.strokeStyle = "blue";
+    ctx.strokeStyle = "red";
     ctx.lineWidth = 5;
     ctx.stroke();
+    ctx.strokeStyle = "black";
 }
 
 function drawO(row, col) {
@@ -101,9 +94,10 @@ function drawO(row, col) {
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, Math.PI * 2);
 
-    //ctx.strokeStyle = "red";
+    ctx.strokeStyle = "blue";
     ctx.lineWidth = 5;
     ctx.stroke();
+    ctx.strokeStyle = "black";
 }
 
 function update() {

@@ -16,6 +16,21 @@ const homeButton = document.getElementById("homeButton");
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
+function applySize() {
+    const container = document.querySelector(".canvas-container");
+    const size = Math.min(container.clientWidth, container.clientHeight) * 0.9;
+
+    canvas.width = size;
+    canvas.height = size;
+
+    if (currentGame) {
+        currentGame.setSize(size);
+    }
+    draw();
+}
+
+window.addEventListener("resize", applySize);
+
 canvas.addEventListener("click", function(event) {
     const rect = canvas.getBoundingClientRect();
 
@@ -55,7 +70,7 @@ resetButton.addEventListener("click", function() {
 homeButton.addEventListener("click", function() {
     currentGame = null;
     scene = "START";
-
+    applySize();
     updateStatusBar();
 })
 
@@ -139,12 +154,7 @@ function selectGameMode(mode){
             return;
     }
     currentGame.setCanvas(canvas, ctx);
-    currentGame.resize();
-
-    window.addEventListener("resize", () => {
-        currentGame.resize();
-        draw();
-    });
+    applySize();
 
     currentGame.start();
     scene = "GAME";
@@ -153,6 +163,7 @@ function selectGameMode(mode){
 function updateStatusBar() {
     if (scene !== "GAME" && scene != "WIN"){
         statusBar.style.display = "none";
+        canvas.classList.remove("turn-x", "turn-o");
         return;
     }
 
@@ -161,6 +172,7 @@ function updateStatusBar() {
 
     if (scene === "WIN") {
         //const result = currentGame.getResult();
+        canvas.classList.remove("turn-x", "turn-o");
 
         if (result.winner === "T")  {
             gameStatus.textContent = "Game Tied";
@@ -184,9 +196,13 @@ function updateStatusBar() {
 
     if (result.currentPlayer === "X") {
         gameStatus.style.color = "red";
+        canvas.classList.add("turn-x");
+        canvas.classList.remove("turn-o");
     }
     else {
         gameStatus.style.color = "blue";
+        canvas.classList.add("turn-o");
+        canvas.classList.remove("turn-x");
     }
 }
 
@@ -343,4 +359,6 @@ function gameLoop() {
     updateStatusBar();
     requestAnimationFrame(gameLoop);
 }
+
+applySize();
 gameLoop();
