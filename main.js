@@ -8,6 +8,11 @@ let currentGame = null;
 let scene = "START";
 let gameResult = null;
 
+const statusBar = document.getElementById("statusBar");
+const gameStatus = document.getElementById("gameStatus");
+const resetButton = document.getElementById("resetButton");
+const homeButton = document.getElementById("homeButton");
+
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
@@ -35,6 +40,24 @@ canvas.addEventListener("click", function(event) {
             break;
     }
 });
+
+resetButton.addEventListener("click", function() {
+    if (currentGame === null){
+        return;
+    }
+
+    currentGame.start();
+    scene = "GAME";
+
+    updateStatusBar();
+})
+
+homeButton.addEventListener("click", function() {
+    currentGame = null;
+    scene = "START";
+
+    updateStatusBar();
+})
 
 function handleStartClick(mouseX, mouseY) {
     const buttonX = canvas.width / 2 - 100;
@@ -127,6 +150,45 @@ function selectGameMode(mode){
     scene = "GAME";
 }
 
+function updateStatusBar() {
+    if (scene !== "GAME" && scene != "WIN"){
+        statusBar.style.display = "none";
+        return;
+    }
+
+    statusBar.style.display = "flex";
+    const result = currentGame.getResult();
+
+    if (scene === "WIN") {
+        //const result = currentGame.getResult();
+
+        if (result.winner === "T")  {
+            gameStatus.textContent = "Game Tied";
+            gameStatus.style.color = "white";
+        }
+        else {
+            gameStatus.textContent = `${result.winner} Wins!`;
+
+            if (result.winner === "X") {
+                gameStatus.style.color = "red";
+            }
+            else if (result.winner === "O") {
+                gameStatus.style.color = "blue";
+            }
+        }
+
+        return;
+    }
+
+    gameStatus.textContent = `${result.currentPlayer}'s Turn`;
+
+    if (result.currentPlayer === "X") {
+        gameStatus.style.color = "red";
+    }
+    else {
+        gameStatus.style.color = "blue";
+    }
+}
 
 function drawStartScreen(){
     ctx.fillStyle = "black";
@@ -275,6 +337,7 @@ function gameLoop() {
         }
     }
     draw();
+    updateStatusBar();
     requestAnimationFrame(gameLoop);
 }
 gameLoop();

@@ -174,11 +174,11 @@ function update() {
 
 
 function getResult() {
-    
     return {
         gameOver, 
         winner: result ? result.winner : null,
-        winCon: result ? result.winCon : null
+        winCon: result ? result.winCon : null,
+        currentPlayer
     };
 }
 

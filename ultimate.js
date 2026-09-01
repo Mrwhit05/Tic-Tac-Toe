@@ -475,7 +475,7 @@ function update() {
 
 function getResult() {
     return {
-        gameOver, winner
+        gameOver, winner, currentPlayer
     };
 }
 
